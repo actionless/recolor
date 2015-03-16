@@ -4,7 +4,7 @@ import sys
 import inspect
 
 from ireplace import apply_dir
-import lambdas
+import presets
 
 
 def print_help():
@@ -28,7 +28,7 @@ def main():
 
     print(path)
 
-    fun = getattr(lambdas, fun_name, None)
+    fun = getattr(presets, fun_name, None)
     if not fun:
         print("lambda '{}' not found".format(fun_name))
         fun = eval(fun_name)
