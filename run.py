@@ -8,7 +8,13 @@ import presets
 
 
 def print_help():
-    print('need help?')
+    # @TODO: use argparse/click
+    print("""
+{name} path/to/theme function_to_apply
+
+function can be both reference to a function from ./presets.py or 
+string with python lambda, like "lambda r, g, b, a: (r+10, g-10, b, a)"
+         """.format(name=sys.argv[0]))
     sys.exit(2)
 
 
