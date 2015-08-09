@@ -83,7 +83,7 @@ def apply_lambda_text(filename, fun):
         else:
             data = re.sub('#[0-9A-Fa-f]{6}',
                           replace_hex, data)
-            data = re.sub("rgba\((\d+), (\d+), (\d+), (\d+)\)",
+            data = re.sub("rgba\((\d+), (\d+), (\d+), ([-+]?\d*\.\d+|\d+)\)",
                           replace_rgba, data)
     if not data:
         return
