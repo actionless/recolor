@@ -2,20 +2,11 @@
 
 import sys
 import inspect
+import argparse
+import shutil
 
 from ireplace import apply_dir
 import presets
-
-
-def print_help():
-    # @TODO: use argparse/click
-    print("""
-{name} path/to/theme function_to_apply
-
-function can be either reference to a function from ./presets.py or 
-string with python lambda, like "lambda r, g, b, a: (r+10, g-10, b, a)"
-         """.format(name=sys.argv[0]))
-    sys.exit(2)
 
 
 def normalize_function_arguments(fun):
@@ -27,12 +18,29 @@ def normalize_function_arguments(fun):
 
 def main():
 
-    if len(sys.argv) < 3:
-        print_help()
-    path = sys.argv[1]
-    fun_name = sys.argv[2]
+    parser = argparse.ArgumentParser(
+        description='Apply color transformations to files in a folder.'
+    )
+    parser.add_argument('--src', dest='src',
+                        # metavar='~/.themes/original-theme',
+                        metavar='PATH_TO_ORIGINAL_THEME',
+                        help='path to source theme to copy')
+    parser.add_argument('dest',
+                        # metavar='~/.themes/destination-theme',
+                        metavar='PATH_TO_DESTINATION_THEME',
+                        help='path to destionation theme to replace colors')
+    parser.add_argument('fun_name',
+                        # metavar='lambda r, g, b, a: (r+10, g-10, b, a)',
+                        metavar='FUNCTION_TO_APPLY',
+                        help='transformation preset or lambda to apply')
+    args = parser.parse_args()
 
-    print(path)
+    path = args.dest
+    fun_name = args.fun_name
+
+    if args.src:
+        shutil.rmtree(path)
+        shutil.copytree(args.src, path)
 
     fun = getattr(presets, fun_name, None)
     if not fun:
@@ -43,6 +51,7 @@ def main():
             sys.exit(3)
     fun = normalize_function_arguments(fun)
 
+    print(path)
     apply_dir(path, fun)
 
 if __name__ == '__main__':
