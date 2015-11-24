@@ -7,29 +7,13 @@ import pickle
 import dill
 from PIL import Image
 
+from common import hex2rgb, rgb2hex
+
 
 R = 0
 G = 1
 B = 2
 A = 3
-
-
-def rgb2hex(pixel):
-    """ convert an (R, G, B) tuple to #RRGGBB """
-    r, g, b, a = pixel
-    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
-
-
-def hex2rgb(colorstring):
-    """ convert #RRGGBB to an (R, G, B) tuple """
-    colorstring = colorstring.strip()
-    if colorstring[0] == '#':
-        colorstring = colorstring[1:]
-    if len(colorstring) != 6:
-        raise(ValueError("input #%s is not in #RRGGBB format" % colorstring))
-    r, g, b = colorstring[:2], colorstring[2:4], colorstring[4:]
-    r, g, b = [int(n, 16) for n in (r, g, b)]
-    return r, g, b
 
 
 def rgba2str(pixel):
@@ -78,8 +62,9 @@ def apply_lambda_text(filename, fun):
     with open(filename) as file:
         try:
             data = file.read()
-        except:
-            print("error or reading {f}".format(f=filename))
+        except Exception as e:
+            print("error while reading {f}".format(f=filename))
+            print(e)
         else:
             data = re.sub('#[0-9A-Fa-f]{6}',
                           replace_hex, data)
@@ -115,7 +100,6 @@ def apply_lambda(args):
     def patched_fun(pixel):
         """
         it looks so classy because of performance issues.
-        it takes 1.7 seconds on testsuite
         """
         r, g, b, a = f(pixel)
         if r:
@@ -139,14 +123,6 @@ def apply_lambda(args):
             elif a > 255:
                 a = 255
         return r, g, b, a
-
-    def patched_fun_bak(pixel):
-        """
-        this one takes 3 seconds on the same testsuite :(
-        """
-        return tuple(
-            x if x and 0 < x < 255 else x for x in f(pixel)
-        )
 
     progress_dot()
     if is_image_file(file_path):
