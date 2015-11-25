@@ -39,13 +39,20 @@ def main():
     fun_name = args.fun_name
 
     if args.src:
-        shutil.rmtree(path)
+        try:
+            shutil.rmtree(path)
+        except FileNotFoundError:
+            pass
         shutil.copytree(args.src, path)
 
     fun = getattr(presets, fun_name, None)
     if not fun:
-        print("lambda '{}' not found".format(fun_name))
-        fun = eval(fun_name)
+        print("preset '{}' not found".format(fun_name))
+        try:
+            fun = eval(fun_name)
+        except NameError as e:
+            print(e)
+            sys.exit(4)
         if not fun:
             print("'{}' is not a function".format(fun_name))
             sys.exit(3)
