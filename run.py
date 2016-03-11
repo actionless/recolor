@@ -1,19 +1,9 @@
 #!/bin/env python
 
-import sys
-import inspect
 import argparse
 import shutil
 
 from ireplace import apply_dir
-import presets
-
-
-def normalize_function_arguments(fun):
-    if len(inspect.getargspec(fun).args) == 4:
-        return lambda pixel: fun(pixel[0], pixel[1], pixel[2], pixel[3])
-    else:
-        return fun
 
 
 def main():
@@ -35,8 +25,8 @@ def main():
                         help='transformation preset or lambda to apply')
     args = parser.parse_args()
 
+    func_name = args.fun_name
     path = args.dest
-    fun_name = args.fun_name
 
     if args.src:
         try:
@@ -46,21 +36,8 @@ def main():
             pass
         shutil.copytree(args.src, path)
 
-    fun = getattr(presets, fun_name, None)
-    if not fun:
-        print("preset '{}' not found".format(fun_name))
-        try:
-            fun = eval(fun_name)
-        except NameError as e:
-            print(e)
-            sys.exit(4)
-        if not fun:
-            print("'{}' is not a function".format(fun_name))
-            sys.exit(3)
-    fun = normalize_function_arguments(fun)
-
     print(path)
-    apply_dir(path, fun)
+    apply_dir(path, func_name)
 
 if __name__ == '__main__':
     main()

@@ -2,12 +2,12 @@ import os
 import re
 import sys
 import multiprocessing
-import pickle
+import inspect
 
-import dill
 from PIL import Image
 
 from common import hex2rgb, rgb2hex
+import presets
 
 
 R = 0
@@ -96,10 +96,32 @@ def progress_dot():
     sys.stdout.flush()
 
 
+def normalize_function_arguments(fun):
+    if len(inspect.getargspec(fun).args) == 4:
+        return lambda pixel: fun(pixel[0], pixel[1], pixel[2], pixel[3])
+    else:
+        return fun
+
+
+def get_function(func_name):
+    fun = getattr(presets, func_name, None)
+    if not fun:
+        print("preset '{}' not found".format(func_name))
+        try:
+            fun = eval(fun_name)
+        except NameError as e:
+            print(e)
+            sys.exit(4)
+        if not fun:
+            print("'{}' is not a function".format(func_name))
+            sys.exit(3)
+    fun = normalize_function_arguments(fun)
+    return fun
+
+
 def apply_lambda(args):
-    f, file_path = args
-    if isinstance(f, bytes):
-        f = dill.loads(f)
+    func_name, file_path = args
+    f = get_function(func_name)
 
     def patched_fun(pixel):
         """
@@ -135,13 +157,9 @@ def apply_lambda(args):
         apply_lambda_text(file_path, patched_fun),
 
 
-def apply_dir(dir_path, fun):
-    try:
-        pickle.dumps(fun)
-    except pickle.PicklingError:
-        fun = dill.dumps(fun)
+def apply_dir(dir_path, func_name):
     files = ls_r(dir_path)
     print(len(files))
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    pool.map(apply_lambda, ((fun, file_path) for file_path in files))
+    pool.map(apply_lambda, ((func_name, file_path) for file_path in files))
     print()
