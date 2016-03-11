@@ -165,8 +165,8 @@ def apply_dir(dir_path, func_name):
     files = ls_r(dir_path)
     print(len(files))
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    pool.map(
-        partial(apply_lambda, func_name),
-        (file_path for file_path in files)
-    )
+    for file_path in files:
+        pool.apply_async(apply_lambda, (func_name, file_path))
+    pool.close()
+    pool.join()
     print("")
