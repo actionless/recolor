@@ -3,6 +3,7 @@ import re
 import sys
 import multiprocessing
 import inspect
+from functools import partial
 
 from PIL import Image
 
@@ -96,14 +97,13 @@ def progress_dot():
     sys.stdout.flush()
 
 
-def normalize_function_arguments(fun):
-    if len(inspect.getargspec(fun).args) == 4:
-        return lambda pixel: fun(pixel[0], pixel[1], pixel[2], pixel[3])
-    else:
-        return fun
+function_cache = {}
 
 
 def get_function(func_name):
+    if func_name in function_cache:
+        return function_cache[func_name]
+
     fun = getattr(presets, func_name, None)
     if not fun:
         print("preset '{}' not found".format(func_name))
@@ -115,12 +115,14 @@ def get_function(func_name):
         if not fun:
             print("'{}' is not a function".format(func_name))
             sys.exit(3)
-    fun = normalize_function_arguments(fun)
+    if len(inspect.getargspec(fun).args) == 4:
+        fun = lambda pixel: fun(pixel[0], pixel[1], pixel[2], pixel[3])
+
+    function_cache[func_name] = fun
     return fun
 
 
-def apply_lambda(args):
-    func_name, file_path = args
+def apply_lambda(func_name, file_path):
     f = get_function(func_name)
 
     def patched_fun(pixel):
@@ -161,5 +163,8 @@ def apply_dir(dir_path, func_name):
     files = ls_r(dir_path)
     print(len(files))
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    pool.map(apply_lambda, ((func_name, file_path) for file_path in files))
-    print()
+    pool.map(
+        partial(apply_lambda, func_name),
+        (file_path for file_path in files)
+    )
+    print("")
