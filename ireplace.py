@@ -116,10 +116,12 @@ def get_function(func_name):
             print("'{}' is not a function".format(func_name))
             sys.exit(3)
     if len(inspect.getargspec(fun).args) == 4:
-        fun = lambda pixel: fun(pixel[0], pixel[1], pixel[2], pixel[3])
-
-    function_cache[func_name] = fun
-    return fun
+        def patched_fun(pixel):
+            return fun(pixel[0], pixel[1], pixel[2], pixel[3])
+        function_cache[func_name] = patched_fun
+    else:
+        function_cache[func_name] = fun
+    return function_cache[func_name]
 
 
 def apply_lambda(func_name, file_path):
