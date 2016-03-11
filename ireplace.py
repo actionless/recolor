@@ -32,15 +32,19 @@ def ls_r(path):
     ]
 
 
-def apply_lambda_image(filename, fun):
-    image = Image.open(filename).convert('RGBA')
+def apply_lambda_image(image, fun):
     data = image.getdata()
     new_image = [fun(pixel) for pixel in data]
     image.putdata(new_image)
-    image.save(filename)
-    del image
     del new_image[:]
     del data
+
+
+def apply_lambda_image_filename(filename, fun):
+    image = Image.open(filename).convert('RGBA')
+    apply_lambda_image(image, fun)
+    image.save(filename)
+    del image
 
 
 def apply_lambda_text(filename, fun):
@@ -126,7 +130,7 @@ def apply_lambda(args):
 
     progress_dot()
     if is_image_file(file_path):
-        apply_lambda_image(file_path, patched_fun)
+        apply_lambda_image_filename(file_path, patched_fun)
     else:
         apply_lambda_text(file_path, patched_fun),
 
