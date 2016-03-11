@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/bin/env python
 
 import sys
 import inspect
@@ -41,7 +41,8 @@ def main():
     if args.src:
         try:
             shutil.rmtree(path)
-        except FileNotFoundError:
+        # except FileNotFoundError:
+        except (IOError, OSError):
             pass
         shutil.copytree(args.src, path)
 
