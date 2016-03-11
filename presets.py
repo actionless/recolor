@@ -89,21 +89,22 @@ def arc_monovedek_lr(pixel):
         # darker:
         return (r - 47, g - 45, b - 50, a)
 
-def arc_monovedek_lr(pixel):
-    replacements = {
-        "SELECTION_BG": ("#5294e2", "#aa3683"),
-        "MENU_BG": ("#2f343f", "#0e0021"),
-        "MENU_FG2": ("#afb8c5", "#888a85"),
-        "MENU_FG3": ("#cfdae7", "#888a85"),
-        "SIDE_BG": ("#353945", "#0e0021"),
-    }
-    new_pixel = replace_colors(pixel, replacements)
-    if new_pixel:
-        return new_pixel
-    else:
-        r, g, b, a = pixel
-        # darker:
-        return (r - 47, g - 45, b - 50, a)
+
+# def arc_monovedek_lr(pixel):
+    # replacements = {
+        # "SELECTION_BG": ("#5294e2", "#aa3683"),
+        # "MENU_BG": ("#2f343f", "#0e0021"),
+        # "MENU_FG2": ("#afb8c5", "#888a85"),
+        # "MENU_FG3": ("#cfdae7", "#888a85"),
+        # "SIDE_BG": ("#353945", "#0e0021"),
+    # }
+    # new_pixel = replace_colors(pixel, replacements)
+    # if new_pixel:
+        # return new_pixel
+    # else:
+        # r, g, b, a = pixel
+        # # darker:
+        # return (r - 47, g - 45, b - 50, a)
 
 
 def arc_monomono_lr(pixel):
