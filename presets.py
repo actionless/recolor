@@ -34,6 +34,12 @@ def invert(r, g, b, a):
     return r, g, b, a
 
 
+def test(pixel):
+    return blue_to_purple(
+        *blue_to_red(*invert(*pixel))
+    )
+
+
 def only_blue_to_pink(r, g, b, a):
     if b > r and b > g:
         r, b = b, r
@@ -50,13 +56,13 @@ def replace_colors(pixel, replacements):
     # return pixel
 
 
-def arc_recolor(pixel):
+def arc_monovedek_r(pixel):
     replacements = {
         # "SELECTION_BG": ("#5294e2", "#cc6699"),
         "SELECTION_BG": ("#5294e2", "#aa3683"),
         # "INPUT_BG": ("#ffffff", "#c0bbbb"),
-        "MENU_BG": ("#2f343b", "#0e0021"),
-        "MENU_FG": ("#afbbc5", "#bcbcbc"),
+        "MENU_BG": ("#2f343f", "#0e0021"),
+        "MENU_FG": ("#afb8c5", "#888a85"),
     }
     new_pixel = replace_colors(pixel, replacements)
     if new_pixel:
@@ -67,6 +73,110 @@ def arc_recolor(pixel):
         return (r - 107, g - 105, b - 110, a)
 
 
+def arc_monovedek_lr(pixel):
+    replacements = {
+        "SELECTION_BG": ("#5294e2", "#aa3683"),
+        "MENU_BG": ("#2f343f", "#0e0021"),
+        "MENU_FG2": ("#afb8c5", "#888a85"),
+        "MENU_FG3": ("#cfdae7", "#888a85"),
+        "SIDE_BG": ("#353945", "#0e0021"),
+    }
+    new_pixel = replace_colors(pixel, replacements)
+    if new_pixel:
+        return new_pixel
+    else:
+        r, g, b, a = pixel
+        # darker:
+        return (r - 47, g - 45, b - 50, a)
+
+def arc_monovedek_lr(pixel):
+    replacements = {
+        "SELECTION_BG": ("#5294e2", "#aa3683"),
+        "MENU_BG": ("#2f343f", "#0e0021"),
+        "MENU_FG2": ("#afb8c5", "#888a85"),
+        "MENU_FG3": ("#cfdae7", "#888a85"),
+        "SIDE_BG": ("#353945", "#0e0021"),
+    }
+    new_pixel = replace_colors(pixel, replacements)
+    if new_pixel:
+        return new_pixel
+    else:
+        r, g, b, a = pixel
+        # darker:
+        return (r - 47, g - 45, b - 50, a)
+
+
+def arc_monomono_lr(pixel):
+    replacements = {
+        "SELECTION_BG": ("#5294e2", "#aa3683"),
+        "MENU_BG": ("#2f343f", "#0e0021"),
+        "MENU_FG2": ("#afb8c5", "#888a85"),
+        "MENU_FG3": ("#cfdae7", "#888a85"),
+        "SIDE_BG": ("#353945", "#0e0021"),
+    }
+    new_pixel = replace_colors(pixel, replacements)
+    if new_pixel:
+        return new_pixel
+    else:
+        r, g, b, a = pixel
+        # darker:
+        return (r - 46, g - 41, b - 50, a)
+
+
+def arc_win9(pixel):
+    replacements = {
+        "BG": ("#f5f6f7", "#bfbfbf"),
+        "SELECTION_BG": ("#5294e2", "#00007f"),
+        "MENU_BG": ("#2f343f", "#bfbfbf"),
+        "MENU_FG2": ("#afb8c5", "#000000"),
+        "MENU_FG3": ("#cfdae7", "#000000"),
+    }
+    new_pixel = replace_colors(pixel, replacements)
+    if new_pixel:
+        return new_pixel
+    else:
+        return pixel
+        r, g, b, a = pixel
+        # darker:
+        return (r - 44, g - 45, b - 46, a)
+
+
+def vertex98(pixel):
+    replacements = {
+        "TXT_BG": ("#ffffff", "#ffffff"),
+        "PROGRESS_BG": ("#bababc", "#ffffff"),
+        # "BG": ("#fafafa", "#bfbfbf"),
+        # "BG2": ("#f3f3f5", "#bfbfbf"),
+
+        "SELECTION_BG": ("#5294e2", "#00007f"),
+        "MENU_BG": ("#2f343f", "#bfbfbf"),
+        "MENU_FG2": ("#afb8c5", "#000000"),
+        "MENU_FG3": ("#cfdae7", "#000000"),
+    }
+    new_pixel = replace_colors(pixel, replacements)
+    if new_pixel:
+        return new_pixel
+    else:
+        r, g, b, a = pixel
+        if (b - r > 10) and (b - g > 10):
+            return (r - 40, g - 80, b - 124, a)
+        # darker:
+        return (r - 59, g - 59, b - 59, a)
+
+
+def arc_monovedek_lp(pixel):
+    replacements = {
+        "SELECTION_BG": ("#5294e2", "#963696"),
+    }
+    new_pixel = replace_colors(pixel, replacements)
+    if new_pixel:
+        return new_pixel
+    else:
+        r, g, b, a = pixel
+        # darker:
+        return (r - 37, g - 35, b - 40, a)
+
+
 def arc_magenta(pixel):
     new_pixel = replace_colors(pixel, {
         "SELECTION_BG": ("#5294e2", "#aa3683"),
@@ -74,10 +184,30 @@ def arc_magenta(pixel):
     if new_pixel:
         return new_pixel
     else:
-        r, g, b, a = pixel
-        # blue to purple
-        r, g = g, r
-        return (r, g, b, a)
+        return blue_to_purple(*pixel)
+        # return blue_to_light_green(*pixel)
+
+
+def arc_purple(pixel):
+    new_pixel = replace_colors(pixel, {
+        "SELECTION_BG": ("#5294e2", "#963696"),
+    })
+    if new_pixel:
+        return new_pixel
+    else:
+        return blue_to_purple(*pixel)
+        # return blue_to_light_green(*pixel)
+
+
+def arc_purple2(pixel):
+    new_pixel = replace_colors(pixel, {
+        "SELECTION_BG": ("#5294e2", "#963696"),
+    })
+    if new_pixel:
+        return new_pixel
+    else:
+        r, g, b, a = blue_to_purple(*pixel)
+        return r-38, g-47, b-30, a
 
 
 def arc_red(pixel):
@@ -89,17 +219,6 @@ def arc_red(pixel):
     else:
         r, g, b, a = pixel
         return (g, b, r, a)
-
-
-def arc_pink(pixel):
-    # new_pixel = replace_colors(pixel, {
-        # "SELECTION_BG": ("#5294e2", "#e2527d"),
-    # })
-    # if new_pixel:
-        # return new_pixel
-    # else:
-    r, g, b, a = pixel
-    return (b, r, g, a)
 
 
 def fl_recolor(pixel):
