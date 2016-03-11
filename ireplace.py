@@ -68,7 +68,7 @@ def apply_lambda_text(filename, fun):
         try:
             data = file.read()
         except Exception as e:
-            print("error while reading {f}".format(f=filename))
+            print("\nerror while reading {f}:".format(f=filename))
             print(e)
         else:
             data = re.sub('#[0-9A-Fa-f]{6}',
